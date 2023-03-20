@@ -1,24 +1,64 @@
-import logo from './logo.svg';
-import './App.css';
+import { gapi } from "gapi-script";
+import { useEffect } from "react";
+import GoogleLogin, { GoogleLogout } from "react-google-login";
+import { FcGoogle } from "react-icons/fc";
+import { RiKakaoTalkFill } from "react-icons/ri";
+
+const clientId =
+  "342053744355-uf9sbrchgoh5bq2kq1v1q99h32li5rns.apps.googleusercontent.com";
 
 function App() {
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId,
+        scope: "email",
+      });
+    }
+
+    gapi.load("client:auth2", start);
+  }, []);
+
+  const onSuccess = (response) => {
+    console.log(response);
+  };
+
+  const onFailure = (response) => {
+    console.log(response);
+  };
+
+  const onLogoutSuccess = (response) => {
+    console.log(response);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className="main">
+      <h1 className="title">Welcome</h1>
+      <p>로그인 하세요</p>
+
+      <form>
+        <div>
+          <input type="text" id="id" placeholder="ID" />
+          <br></br>
+
+          <input type="text" id="password" placeholder="PASSWORD" />
+        </div>
+
+        <button className="login-button">로그인</button>
+        <div>
+          <FcGoogle className="icon" />
+          <RiKakaoTalkFill className="icon" />
+          <GoogleLogin
+            clientId={clientId}
+            buttonText="구글 로그인"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+          />
+          <GoogleLogout clientId={clientId} onLogoutSuccess={onLogoutSuccess} />
+        </div>
+        <button>회원가입</button>
+      </form>
+    </main>
   );
 }
 
